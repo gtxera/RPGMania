@@ -34,6 +34,12 @@ public class BattleSystem : MonoBehaviour
 
     public GameObject attackButtonGO;
     public Button attackButton;
+    public bool attackButtonClicked = false;
+    private GameObject attackToggleGO;
+    private Toggle attackToggle;
+    public GameObject specialButtonGO;
+    public Button specialButton;
+    public bool specialButtonClicked = false;
 
     public int roundSize;
     public int currentTurn = 0;
@@ -78,6 +84,8 @@ public class BattleSystem : MonoBehaviour
         BattleHUDSetup = BattleHUDObj.GetComponent<BattleHUDSetup>();
         attackButton = attackButtonGO.GetComponent<Button>();
         attackButton.onClick.AddListener(PlayerAttack);
+        specialButton = specialButtonGO.GetComponent<Button>();
+        specialButton.onClick.AddListener(PlayerSpecial);
 
         if(player1Prefab){
             GameObject player1GO = Instantiate(player1Prefab, player1BattleStation);
@@ -172,8 +180,11 @@ public class BattleSystem : MonoBehaviour
         currentIndicator.SetActive(true);
         switch(state){
             case BattleState.ENEMYTURN:
+                attackButtonClicked = false;
+                specialButtonClicked = false;
                 attackButton.enabled = false;
-                PlayerAttack();
+                specialButton.enabled = false;
+                StartCoroutine(currentUnit.Action());
                 break;
             case BattleState.PLAYERTURN:
                 attackButton.enabled = true;
@@ -181,12 +192,36 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
-    IEnumerator EnemyAttack(){
-        yield return new WaitUntil(() => turnOver);
-        UpdateBattleState();
-    }
     void PlayerAttack(){
-        StartCoroutine(currentUnit.Action());
-        Debug.Log("xablau");
+        if(!attackButtonClicked){
+            if(specialButtonClicked){
+                StopCoroutine(currentUnit.Action());
+                specialButtonClicked = false;
+            }
+            currentUnit.chanceToSpecial = 0;
+            StartCoroutine(currentUnit.Action());
+            attackButtonClicked = true;
+        }
+        else{
+            currentUnit.Cleanup();
+            StopCoroutine(currentUnit.Action());
+            attackButtonClicked = false;
+        }
+    }
+    void PlayerSpecial(){
+        if(!specialButtonClicked){
+            if(attackButtonClicked){
+                StopCoroutine(currentUnit.Action());
+                attackButtonClicked = false;
+            }
+            currentUnit.chanceToSpecial = 1;
+            StartCoroutine(currentUnit.Action());
+            specialButtonClicked = true;
+        }
+        else{
+            currentUnit.Cleanup();
+            StopCoroutine(currentUnit.Action());
+            specialButtonClicked = false;
+        }
     }
 }

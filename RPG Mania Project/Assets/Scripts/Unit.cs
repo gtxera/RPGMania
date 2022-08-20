@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Unit : MonoBehaviour
 {
@@ -34,7 +35,9 @@ public class Unit : MonoBehaviour
     private Camera mainCam {get {return Camera.main.GetComponent<Camera>();}}
     private Ray ray;
     private RaycastHit2D hover;
-    private GameObject targetHover; 
+    private GameObject targetHover;
+
+    public UnityEvent specialAction; 
     
     public IEnumerator Action()
     {
@@ -53,6 +56,9 @@ public class Unit : MonoBehaviour
             targetUnit = target.GetComponent<Unit>();
             currentRnd = random.Next(100);
             if(currentRnd < chanceToSpecial){
+                specialAction.Invoke();
+                battleSystem.turnOver = true;
+                battleSystem.UpdateBattleState();
                 yield return true;
             }
             else{
@@ -65,23 +71,33 @@ public class Unit : MonoBehaviour
             }
         }
         else{
-            Debug.Log("aqui");
             enemys = GameObject.FindGameObjectsWithTag("Enemy");
             foreach (GameObject enemy in enemys){
-                GameObject enemySelectable = enemy.transform.Find("selectableIndicator").gameObject;
+            GameObject enemySelectable = enemy.transform.Find("selectableIndicator").gameObject;
                 enemySelectable.SetActive(true);
-           }
+            }
             if(isSelectingTarget == false){isSelectingTarget = true;}
             yield return new WaitUntil(() => hasSelectedTarget);
             yield return new WaitForSeconds(2);
-            Attack();
+
+            switch(chanceToSpecial){
+                case 0:
+                    Attack();
+                break;
+
+                case 1:
+                    specialAction.Invoke();
+                break;
+            }
+
             targetSelectable.SetActive(false);
             targetHover.SetActive(false);
             targetSelectable.transform.parent.gameObject.GetComponent<MouseExitDeactivate>().alwaysActive = false;
             battleSystem.turnOver = true;
             battleSystem.UpdateBattleState();
-            yield return true;
-        }  
+            hasSelectedTarget = false;
+            yield return true; 
+        } 
     }
 
 
@@ -94,10 +110,6 @@ public class Unit : MonoBehaviour
         else{
             Debug.Log("ERROU");
         }
-    }
-
-    void specialAction(GameObject target)
-    {
     }
 
     void Update()
@@ -124,10 +136,25 @@ public class Unit : MonoBehaviour
                         isSelectingTarget = false;
                         hasSelectedTarget = true;
                     }
-                    else{
-                    }
                 }
             }
         }
     }
+
+    public void Cleanup()
+    {
+        enemys = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject enemy in enemys){
+            GameObject enemySelectable = enemy.transform.Find("selectableIndicator").gameObject;
+            enemySelectable.SetActive(false);
+        }
+        isSelectingTarget = false;
+    }
+
+    public void hello()
+    {
+        Debug.Log("hello");
+    }
+
+    
 }
