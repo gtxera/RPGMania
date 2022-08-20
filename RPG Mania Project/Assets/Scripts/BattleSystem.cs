@@ -169,6 +169,7 @@ public class BattleSystem : MonoBehaviour
 
     public void UpdateBattleState()
     {
+        currentUnit.Cleanup();
         currentIndicator.SetActive(false);
         turnOver = false;
         currentTurn += 1;
@@ -188,6 +189,7 @@ public class BattleSystem : MonoBehaviour
                 break;
             case BattleState.PLAYERTURN:
                 attackButton.enabled = true;
+                specialButton.enabled = true;
                 break;
         }
     }
