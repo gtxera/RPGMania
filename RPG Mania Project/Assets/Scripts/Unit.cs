@@ -99,10 +99,17 @@ public class Unit : MonoBehaviour
         currentRnd = random.Next(100);
         if(currentRnd < chanceToHit){
             targetUnit.currentHP -= damage;
+            targetUnit.checkForDeath();
         }
         else{
             Debug.Log("ERROU");
         }
+    }
+
+    public void checkForDeath(){
+        if(currentHP <= 0){
+            gameObject.SetActive(false);
+        } 
     }
 
     public void Cleanup()
@@ -150,23 +157,7 @@ public class Unit : MonoBehaviour
 
         ray = mainCam.ScreenPointToRay(Input.mousePosition);
         hover = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity);
-
-        switch(selectPlayer){
-            case true:
-                foreach (GameObject player in players){
-                    GameObject playerSelectable = player.transform.Find("selectableIndicator").gameObject;
-                    playerSelectable.SetActive(true);
-                }
-            break;
-            case false:
-                foreach (GameObject enemy in enemys){
-                    GameObject enemySelectable = enemy.transform.Find("selectableIndicator").gameObject;
-                    enemySelectable.SetActive(true);
-                }
-            break;
-        }
         
-
         if(hover){
             if(selectPlayer){
                 if(hover.collider.gameObject.tag == "Player"){
@@ -211,6 +202,20 @@ public class Unit : MonoBehaviour
 
     IEnumerator playerSelectTargetRoutine(bool selectPlayer){
         if(isSelectingTarget == false){isSelectingTarget = true;}
+        switch(selectPlayer){
+            case true:
+                foreach (GameObject player in players){
+                    GameObject playerSelectable = player.transform.Find("selectableIndicator").gameObject;
+                    playerSelectable.SetActive(true);
+                }
+            break;
+            case false:
+                foreach (GameObject enemy in enemys){
+                    GameObject enemySelectable = enemy.transform.Find("selectableIndicator").gameObject;
+                    enemySelectable.SetActive(true);
+                }
+            break;
+        }
         while(isSelectingTarget){
             target = manualSelectTarget(selectPlayer);
 
@@ -228,7 +233,6 @@ public class Unit : MonoBehaviour
 
     IEnumerator playerHealRoutine(){
         yield return StartCoroutine(playerSelectTargetRoutine(true));
-        Debug.Log("aqui");
         targetUnit = target.GetComponent<Unit>();
         yield return new WaitForSeconds(2);
         targetUnit.currentHP += 1;

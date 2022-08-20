@@ -34,5 +34,8 @@ public class HealthBarSetup : MonoBehaviour
     {
         healthSlider.value = targetUnit.currentHP;
         text.text = targetUnit.currentHP + "/" + targetUnit.maxHP;
+        if(targetUnit.currentHP <= 0){
+            Destroy(gameObject);
+        } 
     }
 }

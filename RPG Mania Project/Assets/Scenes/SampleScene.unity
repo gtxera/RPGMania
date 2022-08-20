@@ -1171,7 +1171,7 @@ MonoBehaviour:
   enemy2Prefab: {fileID: 6157460987482670682, guid: dab3199cfab78f14985c823dfe8593f2, type: 3}
   enemy3Prefab: {fileID: 6157460987482670682, guid: cbdeb277dab746747a813a77f27bf913, type: 3}
   enemy4Prefab: {fileID: 6157460987482670682, guid: dab3199cfab78f14985c823dfe8593f2, type: 3}
-  enemy5Prefab: {fileID: 6157460987482670682, guid: 1719510085eaf0249acea7e33551b0f6, type: 3}
+  enemy5Prefab: {fileID: 0}
   player1BattleStation: {fileID: 525346562}
   player2BattleStation: {fileID: 1094786978}
   player3BattleStation: {fileID: 761271395}

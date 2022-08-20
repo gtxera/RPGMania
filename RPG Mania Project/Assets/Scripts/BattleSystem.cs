@@ -179,22 +179,28 @@ public class BattleSystem : MonoBehaviour
         currentUnit = currentGO.GetComponent<Unit>();
         currentIndicator = currentGO.transform.Find("turnIndicator").gameObject;
         currentIndicator.SetActive(true);
-        switch(state){
-            case BattleState.ENEMYTURN:
-                attackButtonClicked = false;
-                specialButtonClicked = false;
-                attackButton.enabled = false;
-                specialButton.enabled = false;
-                StartCoroutine(currentUnit.Action());
-                break;
-            case BattleState.PLAYERTURN:
-                attackButton.enabled = true;
-                specialButton.enabled = true;
-                break;
+        if(currentGO.activeInHierarchy){
+            switch(state){
+                case BattleState.ENEMYTURN:
+                    attackButtonClicked = false;
+                    specialButtonClicked = false;
+                    attackButton.enabled = false;
+                    specialButton.enabled = false;
+                    StartCoroutine(currentUnit.Action());
+                    break;
+                case BattleState.PLAYERTURN:
+                    attackButton.enabled = true;
+                    specialButton.enabled = true;
+                    break;
+            }
+        }
+        else{
+            UpdateBattleState();
         }
     }
 
     void PlayerAttack(){
+        currentUnit.Cleanup();
         if(!attackButtonClicked){
             if(specialButtonClicked){
                 StopCoroutine(currentUnit.Action());
@@ -205,12 +211,12 @@ public class BattleSystem : MonoBehaviour
             attackButtonClicked = true;
         }
         else{
-            currentUnit.Cleanup();
             StopCoroutine(currentUnit.Action());
             attackButtonClicked = false;
         }
     }
     void PlayerSpecial(){
+        currentUnit.Cleanup();
         if(!specialButtonClicked){
             if(attackButtonClicked){
                 StopCoroutine(currentUnit.Action());
@@ -221,7 +227,6 @@ public class BattleSystem : MonoBehaviour
             specialButtonClicked = true;
         }
         else{
-            currentUnit.Cleanup();
             StopCoroutine(currentUnit.Action());
             specialButtonClicked = false;
         }
