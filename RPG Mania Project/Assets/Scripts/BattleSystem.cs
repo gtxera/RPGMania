@@ -80,12 +80,28 @@ public class BattleSystem : MonoBehaviour
 
     void SetupBattle()
     {
+        
         BattleHUDObj = Instantiate(BattleHUD);
         BattleHUDSetup = BattleHUDObj.GetComponent<BattleHUDSetup>();
         attackButton = attackButtonGO.GetComponent<Button>();
         attackButton.onClick.AddListener(PlayerAttack);
         specialButton = specialButtonGO.GetComponent<Button>();
         specialButton.onClick.AddListener(PlayerSpecial);
+
+        GameObject combatCarryover = GameObject.Find("CombatCarryover(Clone)");
+        GoToCombat combatCarryoverPrefabs = combatCarryover.GetComponent<GoToCombat>();
+
+        player1Prefab = combatCarryoverPrefabs.player1;
+        player2Prefab = combatCarryoverPrefabs.player2;
+        player3Prefab = combatCarryoverPrefabs.player3;
+        
+        enemy1Prefab = combatCarryoverPrefabs.enemy1;
+        enemy2Prefab = combatCarryoverPrefabs.enemy2;
+        enemy3Prefab = combatCarryoverPrefabs.enemy3;
+        enemy4Prefab = combatCarryoverPrefabs.enemy4;
+        enemy5Prefab = combatCarryoverPrefabs.enemy5;
+
+        Destroy(combatCarryover);
 
         if(player1Prefab){
             GameObject player1GO = Instantiate(player1Prefab, player1BattleStation);

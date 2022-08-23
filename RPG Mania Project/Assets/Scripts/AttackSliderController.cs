@@ -15,7 +15,7 @@ public class AttackSliderController : MonoBehaviour
     Image handleImg;
 
     public int dificulty;
-    private float increment = 0.001f;
+    private float increment = 1f;
     private bool goingUp;
     public bool moving;
     private float value;
@@ -42,8 +42,8 @@ public class AttackSliderController : MonoBehaviour
 
         float sliderWidth = sliderTransform.rect.width;
 
-        hitDificulty = sliderWidth/10*2f;
-        hitCritDificulty = sliderWidth/10*4.5f;
+        hitDificulty = sliderWidth/10 * (2f + 0.4f * dificulty);
+        hitCritDificulty = sliderWidth/10 * (4.5f + 0.05f * dificulty);
 
         hitAreaTransform.offsetMin = new Vector2(hitDificulty, 0f);
         hitAreaTransform.offsetMax = new Vector2(-hitDificulty, 0f);
@@ -63,10 +63,10 @@ public class AttackSliderController : MonoBehaviour
             value = slider.value;
 
             if(goingUp){
-                value += increment;
+                value += (increment + 0.3f * dificulty) *  Time.deltaTime;
             }
             else{
-                value -= increment;
+                value -= (increment + 0.3f * dificulty) *  Time.deltaTime;
             }
 
             if(value >= 1){
@@ -82,11 +82,11 @@ public class AttackSliderController : MonoBehaviour
         if(Input.GetKeyDown("space")){
             moving = false;
 
-            if(value >= 0.45f && value <= 0.55f){
+            if(value >= 0.45f + 0.005f * dificulty && value <= 0.55f - 0.005f * dificulty){
                 dmgToReturn = 2;
                 handleImg.color = new Color(255, 245, 0, 255);
             }
-            else if(value >= 0.2f && value <= 0.8f){
+            else if(value >= 0.2f + 0.04f * dificulty && value <= 0.8f - 0.04f * dificulty){
                 dmgToReturn = 1;
                 handleImg.color = new Color32(36, 58, 130, 255);
             }

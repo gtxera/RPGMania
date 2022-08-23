@@ -388,7 +388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Amongus
-  unitLevel: 2
+  unitLevel: 1
   initiative: 5
   maxHP: 7
   currentHP: 7
@@ -396,6 +396,10 @@ MonoBehaviour:
   chanceToHit: 70
   chanceToSpecial: 0
   battleController: {fileID: 0}
+  attackTargetPrefab: {fileID: 0}
+  specialAction:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!61 &-992745265477881861
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -406,7 +410,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}

@@ -303,7 +303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 683264c69a477ae40bb3d98b8b8f8326, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitName: Jose
+  unitName: Player 2
   unitLevel: 1
   initiative: 10
   maxHP: 17
@@ -312,6 +312,7 @@ MonoBehaviour:
   chanceToHit: 100
   chanceToSpecial: 0
   battleController: {fileID: 0}
+  attackTargetPrefab: {fileID: 7342549617579420779, guid: 3606a87aa44a6694ca5e973a36a84195, type: 3}
   specialAction:
     m_PersistentCalls:
       m_Calls:
@@ -351,7 +352,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}

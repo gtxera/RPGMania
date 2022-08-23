@@ -17,10 +17,13 @@ public class Unit : MonoBehaviour
     public int chanceToHit;    
     public int chanceToSpecial;
 
+    private int dificulty;
+
     static System.Random random = new System.Random();
     private int currentRnd;
     public GameObject battleController;
     private BattleSystem battleSystem;
+    public GameObject attackTargetPrefab;
 
     private new string tag;
     
@@ -75,7 +78,19 @@ public class Unit : MonoBehaviour
             switch(chanceToSpecial){
                 case 0:
                     yield return StartCoroutine(playerSelectTargetRoutine(false));
-                    yield return StartCoroutine(player1AttackRoutine());
+                    targetUnit = target.GetComponent<Unit>();
+                    dificulty = targetUnit.unitLevel - unitLevel;
+                    if(dificulty < 0){dificulty = 0;}
+                    switch(unitName){
+                        case "Player 1":
+                            Debug.Log("aqui1");
+                            yield return StartCoroutine(player1AttackRoutine());
+                        break;
+                        case "Player 2":
+                            Debug.Log("aqui2");
+                            yield return StartCoroutine(player2AttackRoutine());
+                        break;
+                    }
                     Attack();
                 break;
 
@@ -95,7 +110,6 @@ public class Unit : MonoBehaviour
 
     public void Attack()
     {    
-        targetUnit = target.GetComponent<Unit>();
         currentRnd = random.Next(100);
         if(currentRnd < chanceToHit){
             targetUnit.currentHP -= damage;
@@ -221,7 +235,7 @@ public class Unit : MonoBehaviour
 
             yield return null;
         }
-        Debug.Log("finalizou rotina");
+        dificulty = unitLevel - target.GetComponent<Unit>().unitLevel;
         yield return true;
     }
 
@@ -235,11 +249,24 @@ public class Unit : MonoBehaviour
         GameObject battleHUD = GameObject.Find("BattleHUD(Clone)");
         GameObject attackSlider = battleHUD.transform.Find("AttackSlider").gameObject;
         AttackSliderController attackSliderController = attackSlider.GetComponent<AttackSliderController>();
+        attackSliderController.dificulty = dificulty;
         attackSlider.SetActive(true);
         yield return new WaitUntil(() => !attackSliderController.moving);
         damage = attackSliderController.dmgToReturn;
         yield return new WaitForSeconds(2);
         attackSlider.SetActive(false);
+    }
+
+    IEnumerator player2AttackRoutine(){
+        GameObject attackTargetHandler = GameObject.Find("AttackTargetHandler");
+        GameObject attackTarget = attackTargetHandler.transform.Find("AttackTarget").gameObject;
+        AttackTargetController attackTargetController = attackTarget.GetComponent<AttackTargetController>();
+        attackTargetController.dificulty = dificulty;
+        attackTarget.SetActive(true);
+        yield return new WaitUntil (() => !attackTargetController.moving);
+        damage = attackTargetController.dmgToReturn;
+        yield return new WaitForSeconds(2);
+        attackTarget.SetActive(false);
     }
 
     IEnumerator playerHealRoutine(){
