@@ -171,6 +171,8 @@ public class BattleSystem : MonoBehaviour
     {
         currentUnit.Cleanup();
         currentIndicator.SetActive(false);
+        attackButtonClicked = false;
+        specialButtonClicked = false;
         turnOver = false;
         currentTurn += 1;
         if(currentTurn > roundSize -1 ){currentTurn = 0;}

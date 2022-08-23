@@ -75,7 +75,7 @@ public class Unit : MonoBehaviour
             switch(chanceToSpecial){
                 case 0:
                     yield return StartCoroutine(playerSelectTargetRoutine(false));
-                    yield return new WaitForSeconds(2);
+                    yield return StartCoroutine(player1AttackRoutine());
                     Attack();
                 break;
 
@@ -229,6 +229,17 @@ public class Unit : MonoBehaviour
     {
         Debug.Log("hello");
         specialFinished = true;
+    }
+
+    IEnumerator player1AttackRoutine(){
+        GameObject battleHUD = GameObject.Find("BattleHUD(Clone)");
+        GameObject attackSlider = battleHUD.transform.Find("AttackSlider").gameObject;
+        AttackSliderController attackSliderController = attackSlider.GetComponent<AttackSliderController>();
+        attackSlider.SetActive(true);
+        yield return new WaitUntil(() => !attackSliderController.moving);
+        damage = attackSliderController.dmgToReturn;
+        yield return new WaitForSeconds(2);
+        attackSlider.SetActive(false);
     }
 
     IEnumerator playerHealRoutine(){
