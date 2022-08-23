@@ -44,8 +44,9 @@ public class AttackTargetController : MonoBehaviour
     {
         if(moving){targetTransform.position += new Vector3 (increment * horizontalDirection * Time.deltaTime, increment * verticalDirection * Time.deltaTime, 0);}
 
+
         if(Input.GetMouseButtonDown(0)){
-            moving = false;
+            //moving = false;
             ray = mainCam.ScreenPointToRay(Input.mousePosition);
             hover = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity);
             if(hover){
